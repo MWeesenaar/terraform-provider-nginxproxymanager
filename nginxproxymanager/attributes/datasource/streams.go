@@ -2,7 +2,7 @@ package datasource
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/sander0542/terraform-provider-nginxproxymanager/nginxproxymanager/utils"
+	"github.com/mweesenaar/terraform-provider-nginxproxymanager/nginxproxymanager/utils"
 )
 
 var nestedStream = map[string]schema.Attribute{

@@ -6,8 +6,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/go-http-utils/headers"
-	"github.com/sander0542/terraform-provider-nginxproxymanager/client/inputs"
-	"github.com/sander0542/terraform-provider-nginxproxymanager/client/resources"
+	"github.com/mweesenaar/terraform-provider-nginxproxymanager/client/inputs"
+	"github.com/mweesenaar/terraform-provider-nginxproxymanager/client/resources"
 	"io"
 	"mime/multipart"
 	"net/http"
@@ -64,6 +64,43 @@ func (c *Client) CreateCertificateCustom(ctx context.Context, certificateCustom 
 	return &ar, nil
 }
 
+func (c *Client) CreateCertificateLetsEncrypt(ctx context.Context, certificateLetsEncrypt *inputs.CertificateLetsEncrypt) (*resources.Certificate, error) {
+	_, err := c.ValidateCertificateLetsEncrypt(ctx, certificateLetsEncrypt)
+	if err != nil {
+		return nil, err
+	}
+
+	certificate := &inputs.Certificate{
+		NiceName: certificateLetsEncrypt.Name,
+		Provider: "other",
+	}
+
+	rb, err := json.Marshal(certificate)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, "POST", fmt.Sprintf("%s/api/nginx/certificates", c.HostURL), strings.NewReader(string(rb)))
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set(headers.ContentType, "application/json")
+
+	body, err := c.doRequest(req, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	ar := resources.Certificate{}
+	err = json.Unmarshal(body, &ar)
+	if err != nil {
+		return nil, err
+	}
+
+	return &ar, nil
+}
+
 func (c *Client) GetCertificates(ctx context.Context) (*resources.CertificateCollection, error) {
 	req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%s/api/nginx/certificates", c.HostURL), nil)
 	if err != nil {
@@ -109,6 +146,54 @@ func (c *Client) GetCertificate(ctx context.Context, id *int64) (*resources.Cert
 }
 
 func (c *Client) ValidateCertificate(ctx context.Context, certificate *inputs.CertificateCustom) (*resources.CertificateValidated, error) {
+	payload := &bytes.Buffer{}
+	writer := multipart.NewWriter(payload)
+
+	certPart, err := writer.CreateFormFile("certificate", "certificate.crt")
+	if err != nil {
+		return nil, err
+	}
+	_, err = io.Copy(certPart, strings.NewReader(certificate.Certificate))
+	if err != nil {
+		return nil, err
+	}
+
+	keyPart, err := writer.CreateFormFile("certificate_key", "certificate.key")
+	if err != nil {
+		return nil, err
+	}
+	_, err = io.Copy(keyPart, strings.NewReader(certificate.CertificateKey))
+	if err != nil {
+		return nil, err
+	}
+
+	err = writer.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, "POST", fmt.Sprintf("%s/api/nginx/certificates/validate", c.HostURL), payload)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set(headers.ContentType, writer.FormDataContentType())
+
+	body, err := c.doRequest(req, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	ar := resources.CertificateValidated{}
+	err = json.Unmarshal(body, &ar)
+	if err != nil {
+		return nil, err
+	}
+
+	return &ar, nil
+}
+
+func (c *Client) ValidateCertificateLetsEncrypt(ctx context.Context, certificate *inputs.CertificateLetsEncrypt) (*resources.CertificateValidated, error) {
 	payload := &bytes.Buffer{}
 	writer := multipart.NewWriter(payload)
 

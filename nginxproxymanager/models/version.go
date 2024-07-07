@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/sander0542/terraform-provider-nginxproxymanager/client/resources"
+	"github.com/mweesenaar/terraform-provider-nginxproxymanager/client/resources"
 )
 
 type Version struct {

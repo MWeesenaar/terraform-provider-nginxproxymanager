@@ -3,13 +3,13 @@ package nginxproxymanager
 import (
 	"context"
 	"fmt"
-	attributes "github.com/sander0542/terraform-provider-nginxproxymanager/nginxproxymanager/attributes/datasource"
-	"github.com/sander0542/terraform-provider-nginxproxymanager/nginxproxymanager/models"
+	attributes "github.com/mweesenaar/terraform-provider-nginxproxymanager/nginxproxymanager/attributes/datasource"
+	"github.com/mweesenaar/terraform-provider-nginxproxymanager/nginxproxymanager/models"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/sander0542/terraform-provider-nginxproxymanager/client"
-	"github.com/sander0542/terraform-provider-nginxproxymanager/nginxproxymanager/common"
+	"github.com/mweesenaar/terraform-provider-nginxproxymanager/client"
+	"github.com/mweesenaar/terraform-provider-nginxproxymanager/nginxproxymanager/common"
 )
 
 var (

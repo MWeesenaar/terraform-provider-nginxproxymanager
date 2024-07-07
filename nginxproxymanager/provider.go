@@ -13,7 +13,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
-	"github.com/sander0542/terraform-provider-nginxproxymanager/client"
+	"github.com/mweesenaar/terraform-provider-nginxproxymanager/client"
 )
 
 var (
@@ -237,6 +237,7 @@ func (p *nginxproxymanagerProvider) DataSources(_ context.Context) []func() data
 func (p *nginxproxymanagerProvider) Resources(_ context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		NewCertificateCustomResource,
+		NewCertificateLetsEncryptResource,
 		NewProxyHostResource,
 	}
 }

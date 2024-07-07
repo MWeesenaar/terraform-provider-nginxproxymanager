@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
-	"github.com/sander0542/terraform-provider-nginxproxymanager/nginxproxymanager/sentry"
+	"github.com/mweesenaar/terraform-provider-nginxproxymanager/nginxproxymanager/sentry"
 )
 
 var (

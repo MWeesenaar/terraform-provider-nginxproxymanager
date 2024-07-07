@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/sander0542/terraform-provider-nginxproxymanager/client/resources"
+	"github.com/mweesenaar/terraform-provider-nginxproxymanager/client/resources"
 )
 
 func (c *Client) GetApi(ctx context.Context) (*resources.Api, error) {

@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"flag"
-	"github.com/sander0542/terraform-provider-nginxproxymanager/nginxproxymanager"
+	"github.com/mweesenaar/terraform-provider-nginxproxymanager/nginxproxymanager"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-framework/providerserver"
@@ -35,7 +35,7 @@ func main() {
 	flag.Parse()
 
 	opts := providerserver.ServeOpts{
-		Address: "registry.terraform.io/sander0542/nginxproxymanager",
+		Address: "registry.terraform.io/mweesenaar/nginxproxymanager",
 		Debug:   debug,
 	}
 

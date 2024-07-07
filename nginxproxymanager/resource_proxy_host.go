@@ -2,17 +2,17 @@ package nginxproxymanager
 
 import (
 	"context"
-	"github.com/sander0542/terraform-provider-nginxproxymanager/client/inputs"
-	attributes "github.com/sander0542/terraform-provider-nginxproxymanager/nginxproxymanager/attributes/resources"
-	"github.com/sander0542/terraform-provider-nginxproxymanager/nginxproxymanager/models"
+	"github.com/mweesenaar/terraform-provider-nginxproxymanager/client/inputs"
+	attributes "github.com/mweesenaar/terraform-provider-nginxproxymanager/nginxproxymanager/attributes/resources"
+	"github.com/mweesenaar/terraform-provider-nginxproxymanager/nginxproxymanager/models"
 	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/sander0542/terraform-provider-nginxproxymanager/client"
-	"github.com/sander0542/terraform-provider-nginxproxymanager/nginxproxymanager/common"
+	"github.com/mweesenaar/terraform-provider-nginxproxymanager/client"
+	"github.com/mweesenaar/terraform-provider-nginxproxymanager/nginxproxymanager/common"
 )
 
 var (

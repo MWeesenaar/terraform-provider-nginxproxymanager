@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/go-http-utils/headers"
-	"github.com/sander0542/terraform-provider-nginxproxymanager/client/inputs"
-	"github.com/sander0542/terraform-provider-nginxproxymanager/client/resources"
+	"github.com/mweesenaar/terraform-provider-nginxproxymanager/client/inputs"
+	"github.com/mweesenaar/terraform-provider-nginxproxymanager/client/resources"
 	"net/http"
 	"strings"
 )

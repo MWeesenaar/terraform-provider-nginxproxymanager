@@ -15,32 +15,32 @@ import (
 )
 
 var (
-	_ common.IResource                    = &certificateCustomResource{}
-	_ resource.ResourceWithConfigure      = &certificateCustomResource{}
-	_ resource.ResourceWithValidateConfig = &certificateCustomResource{}
-	_ resource.ResourceWithImportState    = &certificateCustomResource{}
+	_ common.IResource                    = &certificateLetsEncryptResource{}
+	_ resource.ResourceWithConfigure      = &certificateLetsEncryptResource{}
+	_ resource.ResourceWithValidateConfig = &certificateLetsEncryptResource{}
+	_ resource.ResourceWithImportState    = &certificateLetsEncryptResource{}
 )
 
-func NewCertificateCustomResource() resource.Resource {
-	b := &common.Resource{Name: "certificate_custom"}
-	r := &certificateCustomResource{b, nil}
+func NewCertificateLetsEncryptResource() resource.Resource {
+	b := &common.Resource{Name: "certificate_letsencrypt"}
+	r := &certificateLetsEncryptResource{b, nil}
 	b.IResource = r
 	return r
 }
 
-type certificateCustomResource struct {
+type certificateLetsEncryptResource struct {
 	*common.Resource
 	client *client.Client
 }
 
-func (r *certificateCustomResource) SchemaImpl(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *certificateLetsEncryptResource) SchemaImpl(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "SSL Certificates --- Manage a custom certificate.",
+		Description: "SSL Certificates --- Manage a LetsEncrypt certificate.",
 		Attributes:  attributes.CertificateCustom,
 	}
 }
 
-func (r *certificateCustomResource) Configure(ctx context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
+func (r *certificateLetsEncryptResource) Configure(ctx context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -48,7 +48,7 @@ func (r *certificateCustomResource) Configure(ctx context.Context, req resource.
 	r.client = req.ProviderData.(*client.Client)
 }
 
-func (r *certificateCustomResource) CreateImpl(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+func (r *certificateLetsEncryptResource) CreateImpl(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var plan models.CertificateCustom
 	diags := req.Plan.Get(ctx, &plan)
 	resp.Diagnostics.Append(diags...)
@@ -61,7 +61,7 @@ func (r *certificateCustomResource) CreateImpl(ctx context.Context, req resource
 
 	certificate, err := r.client.CreateCertificateCustom(ctx, &item)
 	if err != nil {
-		resp.Diagnostics.AddError("Error creating certificate custom", "Could not create certificate custom, unexpected error: "+err.Error())
+		resp.Diagnostics.AddError("Error creating certificate letsencrypt", "Could not create certificate letsencrypt, unexpected error: "+err.Error())
 		return
 	}
 
@@ -73,7 +73,7 @@ func (r *certificateCustomResource) CreateImpl(ctx context.Context, req resource
 	}
 }
 
-func (r *certificateCustomResource) ReadImpl(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+func (r *certificateLetsEncryptResource) ReadImpl(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	var state *models.CertificateCustom
 	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
 	if resp.Diagnostics.HasError() {
@@ -82,13 +82,13 @@ func (r *certificateCustomResource) ReadImpl(ctx context.Context, req resource.R
 
 	certificate, err := r.client.GetCertificate(ctx, state.ID.ValueInt64Pointer())
 	if err != nil {
-		resp.Diagnostics.AddError("Error reading certificate custom", "Could not read certificate custom, unexpected error: "+err.Error())
+		resp.Diagnostics.AddError("Error reading certificate letsencrypt", "Could not read certificate letsencrypt, unexpected error: "+err.Error())
 		return
 	}
 	if certificate == nil {
 		state = nil
 	} else if certificate.Provider != "other" {
-		resp.Diagnostics.AddError("Error reading certificate custom", "Certificate is not a custom certificate.")
+		resp.Diagnostics.AddError("Error reading certificate letsencrypt", "Certificate is not a letsencrypt certificate.")
 	} else {
 		resp.Diagnostics.Append(state.Load(ctx, certificate)...)
 	}
@@ -99,11 +99,11 @@ func (r *certificateCustomResource) ReadImpl(ctx context.Context, req resource.R
 	}
 }
 
-func (r *certificateCustomResource) UpdateImpl(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+func (r *certificateLetsEncryptResource) UpdateImpl(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	// There is no update method for certificates, so we delete and recreate
 }
 
-func (r *certificateCustomResource) DeleteImpl(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+func (r *certificateLetsEncryptResource) DeleteImpl(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	var state *models.CertificateCustom
 	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
 	if resp.Diagnostics.HasError() {
@@ -117,7 +117,7 @@ func (r *certificateCustomResource) DeleteImpl(ctx context.Context, req resource
 	}
 }
 
-func (r *certificateCustomResource) ValidateConfig(ctx context.Context, req resource.ValidateConfigRequest, resp *resource.ValidateConfigResponse) {
+func (r *certificateLetsEncryptResource) ValidateConfig(ctx context.Context, req resource.ValidateConfigRequest, resp *resource.ValidateConfigResponse) {
 	var data models.CertificateCustom
 
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
@@ -127,7 +127,7 @@ func (r *certificateCustomResource) ValidateConfig(ctx context.Context, req reso
 	}
 }
 
-func (r *certificateCustomResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *certificateLetsEncryptResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	id, err := strconv.ParseInt(req.ID, 10, 64)
 	if err != nil {
 		resp.Diagnostics.AddError("Error importing certificate custom", "Could not import certificate custom, unexpected error: "+err.Error())

@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-type CertificateCustom struct {
+type CertificateLetsEncrypt struct {
 	ID         types.Int64  `tfsdk:"id"`
 	CreatedOn  types.String `tfsdk:"created_on"`
 	ModifiedOn types.String `tfsdk:"modified_on"`
@@ -21,7 +21,7 @@ type CertificateCustom struct {
 	CertificateKey types.String `tfsdk:"certificate_key"`
 }
 
-func (m *CertificateCustom) Load(ctx context.Context, resource *resources.Certificate) diag.Diagnostics {
+func (m *CertificateLetsEncrypt) Load(ctx context.Context, resource *resources.Certificate) diag.Diagnostics {
 	domainNames, diags := types.ListValueFrom(ctx, types.StringType, resource.DomainNames)
 
 	m.ID = types.Int64Value(resource.ID)
@@ -37,7 +37,7 @@ func (m *CertificateCustom) Load(ctx context.Context, resource *resources.Certif
 	return diags
 }
 
-func (m *CertificateCustom) Save(_ context.Context, input *inputs.CertificateCustom) diag.Diagnostics {
+func (m *CertificateLetsEncrypt) Save(_ context.Context, input *inputs.CertificateLetsEncrypt) diag.Diagnostics {
 	diags := diag.Diagnostics{}
 
 	input.Name = m.Name.ValueString()
